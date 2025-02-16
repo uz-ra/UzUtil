@@ -44,33 +44,60 @@ static void initializePrefix() {
     #endif
 }
 
-+ (void)log:(NSString *)format, ... {
-    va_list args;
-    va_start(args, format);
-    NSString *logMessage = [[NSString alloc] initWithFormat:format arguments:args];
-    va_end(args);
-    
-    // プレフィックスが設定されている場合のみ付与
-    if (_prefix) {
-        logMessage = [NSString stringWithFormat:@"%@ : %@", _prefix, logMessage];
-    }
-    
-    NSLog(@"%@", logMessage);
-}
-
 + (void)log:(NSString *)format writeToFile:(BOOL)writeToFile toPath:(NSString *)toPath, ... {
     va_list args;
     va_start(args, toPath);
-    NSString *logMessage = [[NSString alloc] initWithFormat:format arguments:args];
+    [self log:format 
+  writeToFile:writeToFile 
+includeTimestamp:NO
+       toPath:toPath
+   arguments:args];
     va_end(args);
+}
+
++ (void)log:(NSString *)format 
+writeToFile:(BOOL)writeToFile 
+includeTimestamp:(BOOL)includeTimestamp
+     toPath:(NSString *)toPath, ... {
+    va_list args;
+    va_start(args, toPath);
+    [self log:format 
+  writeToFile:writeToFile 
+includeTimestamp:includeTimestamp
+       toPath:toPath
+   arguments:args];
+    va_end(args);
+}
+
+// 実際の処理を行うヘルパーメソッド
++ (void)log:(NSString *)format 
+writeToFile:(BOOL)writeToFile 
+includeTimestamp:(BOOL)includeTimestamp
+     toPath:(NSString *)toPath
+  arguments:(va_list)arguments {
     
-    // プレフィックスが設定されている場合のみ付与
+    NSString *logMessage = [[NSString alloc] initWithFormat:format arguments:arguments];
+    
+    // タイムスタンプ追加処理
+    if (includeTimestamp) {
+        static NSDateFormatter *formatter;
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            formatter = [[NSDateFormatter alloc] init];
+            [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+        });
+        NSString *timestamp = [formatter stringFromDate:[NSDate date]];
+        logMessage = [NSString stringWithFormat:@"[%@] %@", timestamp, logMessage];
+    }
+    
+    // プレフィックス追加処理
     if (_prefix) {
         logMessage = [NSString stringWithFormat:@"%@ : %@", _prefix, logMessage];
     }
     
     NSLog(@"%@", logMessage);
     
+    // ファイル書き込み処理
     if (writeToFile) {
         NSFileManager *fileManager = [NSFileManager defaultManager];
         if (![fileManager fileExistsAtPath:toPath]) {

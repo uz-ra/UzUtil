@@ -13,4 +13,8 @@
 + (void)log:(NSString *)format, ...;
 + (void)log:(NSString *)format writeToFile:(BOOL)writeToFile toPath:(NSString *)toPath, ...;
 + (NSString *)className:(id)object;
++ (void)log:(NSString *)format 
+writeToFile:(BOOL)writeToFile 
+includeTimestamp:(BOOL)includeTimestamp
+     toPath:(NSString *)toPath, ... NS_FORMAT_FUNCTION(1, 5);
 @end

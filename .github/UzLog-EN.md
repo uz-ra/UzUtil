@@ -42,7 +42,7 @@ SRCS = main.m UzLog.mm
 **File Logging:**
 ```objective-c
 NSString *logFilePath = @"/path/to/logfile.txt";
-[UzLog log:@"Important system event: %d" writeToFile:YES toPath:logFilePath, 42];
+[UzLog log:@"hogehoge %@ is fugafuga %d" writeToFile:YES toPath:logFilePath, arg1, arg2];
 ```
 
 **Class Name Helper:**
