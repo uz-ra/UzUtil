@@ -3,7 +3,7 @@
 (DeepSeekに書いてもらったのでわかりにくかったらTwitter @ChromiumCandy とかで質問してもらえれば)
 
 ## UzLog
-Simple NSLog extensions with additional features / シンプルなNSLogの拡張と追加機能
+Simple NSLog extensions with additional features / シンプルなNSLogの拡張とちょっとだけ手間が省ける追加機能
 
 - [English](./.github/UzLog-EN.md)
 - [日本語](./.github/UzLog-JP.md)
