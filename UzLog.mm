@@ -3,7 +3,7 @@
 //
 /*
 Usage
-#import "UzLog.h"
+まずは#import "UzLog.h"
         //prefixを設定
         [UzLog setPrefix:@"Hogege"];
         //出力結果がHogege: hello worldになる
@@ -23,7 +23,7 @@ Usage
         [UzLog log:@"Class name for arg1 is : %@", [UzLog className:arg1]];
 */
 //
-// UzLog.mm
+//
 
 #import "UzLog.h"
 
