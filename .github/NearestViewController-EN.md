@@ -45,6 +45,7 @@ This method traverses the `nextResponder` of the `UIView` and returns the first 
 If `UIViewController` is not found, it returns `nil`.
 
 If no `UIViewController` is found, then `nil` is returned.
+```objective-c
 - (UIViewController *)nearestViewController {
     // Follow nextResponder to find UIViewController.
     UIResponder *responder = self;
@@ -57,7 +58,7 @@ If no `UIViewController` is found, then `nil` is returned.
 }
 ```
 
---- ````
+---
 
 ## Example usage
 
