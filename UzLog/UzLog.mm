@@ -112,6 +112,20 @@ includeTimestamp:(BOOL)includeTimestamp
     }
 }
 
++ (void)log:(NSString *)format, ... {
+    va_list args;
+    va_start(args, format);
+
+    NSString *logMessage = [[NSString alloc] initWithFormat:format arguments:args];
+    va_end(args);
+
+    if (_prefix) {
+        logMessage = [NSString stringWithFormat:@"%@ : %@", _prefix, logMessage];
+    }
+
+    NSLog(@"%@", logMessage);
+}
+
 + (NSString *)className:(id)object {
     return NSStringFromClass([object class]);
 }
