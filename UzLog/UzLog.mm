@@ -26,6 +26,7 @@ Usage
 //
 
 #import "UzLog.h"
+#import <objc/runtime.h>
 
 @implementation UzLog
 
@@ -128,6 +129,63 @@ includeTimestamp:(BOOL)includeTimestamp
 
 + (NSString *)className:(id)object {
     return NSStringFromClass([object class]);
+}
+
++ (NSString *)ivarClassName:(id)object ivarName:(NSString *)ivarName {
+    if (!object || !ivarName) {
+        return nil;
+    }
+    
+    Class objectClass = [object class];
+    Ivar ivar = class_getInstanceVariable(objectClass, [ivarName UTF8String]);
+    
+    if (!ivar) {
+        // ivarが見つからない場合
+        return nil;
+    }
+    
+    // ivarの型エンコーディングを取得
+    const char *typeEncoding = ivar_getTypeEncoding(ivar);
+    
+    if (!typeEncoding) {
+        return nil;
+    }
+    
+    // オブジェクト型の場合（@"ClassName"の形式）
+    if (typeEncoding[0] == '@') {
+        // @"ClassName" の形式から ClassName を抽出
+        if (strlen(typeEncoding) > 3 && typeEncoding[1] == '"') {
+            NSString *fullTypeString = [NSString stringWithUTF8String:typeEncoding];
+            // @"ClassName" から ClassName を抽出
+            NSRange range = NSMakeRange(2, fullTypeString.length - 3);
+            return [fullTypeString substringWithRange:range];
+        } else {
+            // @だけの場合はid型
+            return @"id";
+        }
+    } else {
+        // プリミティブ型の場合
+        switch (typeEncoding[0]) {
+            case 'c': return @"char";
+            case 'i': return @"int";
+            case 's': return @"short";
+            case 'l': return @"long";
+            case 'q': return @"long long";
+            case 'C': return @"unsigned char";
+            case 'I': return @"unsigned int";
+            case 'S': return @"unsigned short";
+            case 'L': return @"unsigned long";
+            case 'Q': return @"unsigned long long";
+            case 'f': return @"float";
+            case 'd': return @"double";
+            case 'B': return @"BOOL";
+            case 'v': return @"void";
+            case '*': return @"char *";
+            case '#': return @"Class";
+            case ':': return @"SEL";
+            default:  return [NSString stringWithUTF8String:typeEncoding];
+        }
+    }
 }
 
 @end

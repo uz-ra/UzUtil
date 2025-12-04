@@ -9,6 +9,7 @@ UzLogは、ログ出力を簡単にカスタマイズできるObjective-Cのユ�
 - **ファイルロギング**機能
 - **タイムスタンプ付きログ出力**
 - **クラス名取得** 
+- **ivar（インスタンス変数）のクラス名取得**
 - デフォルトのプレフィックス設定のマクロサポート
 
 ---
@@ -95,6 +96,54 @@ includeTimestamp:YES
 
 ---
 
+### 7. ivar（インスタンス変数）のクラス名取得
+
+オブジェクトの特定のインスタンス変数（ivar）のクラス名や型を取得できます。  
+デバッグやリフレクション処理に便利です。
+
+```objective-c
+// ivarのクラス名を取得
+NSString *ivarClass = [UzLog ivarClassName:myObject ivarName:@"_delegate"];
+[UzLog log:@"ivar '_delegate' のクラス名: %@", ivarClass];
+
+// 存在しないivarの場合はnilが返る
+NSString *result = [UzLog ivarClassName:myObject ivarName:@"_nonExistent"];
+if (!result) {
+    [UzLog log:@"指定されたivarは存在しません"];
+}
+```
+
+**対応する型：**
+- オブジェクト型（NSString, UIViewなど）→ クラス名を返す
+- プリミティブ型（int, float, BOOL, doubleなど）→ 型名を返す
+- 存在しないivar → `nil`を返す
+
+**使用例：**
+```objective-c
+@interface MyClass : NSObject {
+    NSString *_title;
+    int _count;
+    UIView *_containerView;
+}
+@end
+
+MyClass *obj = [[MyClass alloc] init];
+
+// オブジェクト型のivar
+NSString *titleClass = [UzLog ivarClassName:obj ivarName:@"_title"];
+// titleClass = @"NSString"
+
+// プリミティブ型のivar
+NSString *countType = [UzLog ivarClassName:obj ivarName:@"_count"];
+// countType = @"int"
+
+// オブジェクト型のivar
+NSString *viewClass = [UzLog ivarClassName:obj ivarName:@"_containerView"];
+// viewClass = @"UIView"
+```
+
+---
+
 ## メソッド比較
 
 | メソッド名                                      | プレフィックス | ファイル出力 | タイムスタンプ | 可変長引数 |
@@ -102,6 +151,8 @@ includeTimestamp:YES
 | `+log:`                                         | あり           | なし         | なし           | あり       |
 | `+log:writeToFile:toPath:`                      | あり           | あり         | なし           | あり       |
 | `+log:writeToFile:includeTimestamp:toPath:`     | あり           | あり         | あり           | あり       |
+| `+className:`                                   | -              | -            | -              | なし       |
+| `+ivarClassName:ivarName:`                      | -              | -            | -              | なし       |
 
 ---
 

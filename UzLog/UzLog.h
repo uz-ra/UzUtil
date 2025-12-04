@@ -13,6 +13,7 @@
 + (void)log:(NSString *)format, ...;
 + (void)log:(NSString *)format writeToFile:(BOOL)writeToFile toPath:(NSString *)toPath, ...;
 + (NSString *)className:(id)object;
++ (NSString *)ivarClassName:(id)object ivarName:(NSString *)ivarName;
 + (void)log:(NSString *)format 
 writeToFile:(BOOL)writeToFile 
 includeTimestamp:(BOOL)includeTimestamp
